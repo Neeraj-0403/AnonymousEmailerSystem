@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎭 Anonymous Message Portal</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&family=Dancing+Script:wght@400;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            position: relative;
+        }
+        
+        .firecracker-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 107, 53, 0.4) 0%, transparent 25%),
+                radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.5) 0%, transparent 30%),
+                radial-gradient(circle at 60% 40%, rgba(255, 23, 68, 0.4) 0%, transparent 20%),
+                radial-gradient(circle at 30% 70%, rgba(255, 152, 0, 0.4) 0%, transparent 25%),
+                radial-gradient(circle at 70% 30%, rgba(233, 30, 99, 0.4) 0%, transparent 25%),
+                radial-gradient(circle at 10% 10%, rgba(0, 255, 136, 0.3) 0%, transparent 15%),
+                radial-gradient(circle at 90% 90%, rgba(255, 64, 129, 0.4) 0%, transparent 20%);
+            animation: firecracker-burst 6s ease-in-out infinite;
+        }
+        
+        @keyframes firecracker-burst {
+            0% { opacity: 0.6; transform: scale(1) rotate(0deg); }
+            25% { opacity: 1; transform: scale(1.3) rotate(90deg); }
+            50% { opacity: 0.8; transform: scale(1.1) rotate(180deg); }
+            75% { opacity: 1; transform: scale(1.4) rotate(270deg); }
+            100% { opacity: 0.6; transform: scale(1) rotate(360deg); }
+        }
+        
+        .fireworks-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.8;
+        }
+        
+        .main-container {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+            position: relative;
+            z-index: 3;
+        }
+        
+        .content-container {
+            width: 100vw;
+            height: 100vh;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        .diwali-card {
+            background: linear-gradient(145deg, rgba(255, 215, 0, 0.1), rgba(255, 107, 53, 0.05));
+            border: 3px solid rgba(255, 215, 0, 0.6);
+            border-radius: 25px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 0 0 40px rgba(255, 215, 0, 0.3);
+            transition: all 0.4s ease;
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        .diwali-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(255, 165, 0, 0.3);
+        }
+        
+        .btn-diwali {
+            background: linear-gradient(45deg, #FF6B35, #FFD700, #FF6B35);
+            border: 2px solid rgba(255, 215, 0, 0.8);
+            color: #000;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 30px;
+            padding: 15px 40px;
+            box-shadow: 0 15px 30px rgba(255, 107, 53, 0.4), 0 0 30px rgba(255, 215, 0, 0.3);
+            transition: all 0.3s ease;
+            font-size: 16px;
+            font-family: 'Orbitron', monospace;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+        
+        .btn-diwali:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(255, 107, 53, 0.6), 0 0 40px rgba(255, 215, 0, 0.5);
+        }
+        
+        .btn-diwali:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-diwali:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 165, 0, 0.6);
+            color: white;
+        }
+        
+        .form-control {
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            border-radius: 15px;
+            padding: 15px 20px;
+            font-size: 16px;
+            color: #fff;
+            font-weight: 500;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 215, 0, 0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            user-select: text;
+            -webkit-user-select: text;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .form-control:focus {
+            background: rgba(0, 0, 0, 0.8);
+            border-color: #FFD700;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.6), inset 0 2px 10px rgba(0, 0, 0, 0.4);
+            color: #fff;
+            outline: none;
+        }
+        
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .form-control.error {
+            border-color: #FFD700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        .form-control.success {
+            border-color: #4caf50;
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        .error-message {
+            display: none;
+        }
+        
+        .validation-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .validation-popup {
+            background: linear-gradient(145deg, rgba(255, 215, 0, 0.9), rgba(255, 165, 0, 0.9));
+            border: 3px solid #FFD700;
+            border-radius: 25px;
+            padding: 30px 40px;
+            text-align: center;
+            color: #000;
+            font-weight: 700;
+            font-size: 18px;
+            box-shadow: 0 20px 50px rgba(255, 215, 0, 0.5);
+            animation: popIn 0.3s ease-out;
+            max-width: 400px;
+        }
+        
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+
+        
+        .form-control.is-invalid {
+            border-color: #FFD700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+        }
+        
+        .form-control.is-valid {
+            border-color: #00FF88;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.6);
+        }
+        
+        .invalid-feedback {
+            display: none;
+        }
+        
+        .form-control::placeholder {
+            color: #999;
+            font-style: italic;
+        }
+        
+        .form-control.is-invalid::placeholder {
+            color: #FFD700;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        .form-label {
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.98);
+            border-color: #ff9800;
+            box-shadow: 0 0 20px rgba(255, 165, 0, 0.6);
+            color: #000;
+        }
+        
+        .title-glow {
+            background: linear-gradient(45deg, #ff6b35, #f7931e, #ffcc02, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.9), 0 0 20px rgba(255,215,0,0.6);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px rgba(255,215,0,0.5)); }
+            to { filter: drop-shadow(0 0 30px rgba(255,215,0,0.8)); }
+        }
+        
+        .sound-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .sound-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.5);
+        }
+        
+        .celebration-alert {
+            background: linear-gradient(45deg, rgba(76, 175, 80, 0.3), rgba(139, 195, 74, 0.3));
+            border: 3px solid #4caf50;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
+            animation: pulse 1s ease-in-out;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        
+        .hidden { display: none !important; }
+        
+        .btn-loading .loading { display: inline-block !important; }
+        .btn-loading span:not(.loading) { display: none !important; }
+        
+        .loading {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.6s linear infinite;
+            margin-left: 8px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .bounce-icon {
+            display: inline-block;
+            animation: bounce 2s infinite;
+            filter: drop-shadow(0 0 15px rgba(255,215,0,0.8));
+        }
+        
+        .pulse-icon {
+            display: inline-block;
+            animation: pulse-glow 1.5s infinite;
+            filter: drop-shadow(0 0 20px rgba(255,69,0,0.8));
+        }
+        
+        .rotate-icon {
+            display: inline-block;
+            animation: rotate-sparkle 3s linear infinite;
+            filter: drop-shadow(0 0 25px rgba(255,215,0,1));
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 20px rgba(255,69,0,0.8)); }
+            50% { transform: scale(1.1); filter: drop-shadow(0 0 30px rgba(255,69,0,1)); }
+        }
+        
+        @keyframes rotate-sparkle {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="firecracker-bg"></div>
+    <canvas id="fireworksCanvas" class="fireworks-bg"></canvas>
+    
+    <button class="sound-toggle" onclick="toggleSound()" id="soundBtn">
+        <i class="fas fa-volume-up"></i> Sound ON
+    </button>
+    
+    <div class="main-container">
+        <div class="content-container">
+            <div id="welcomeSection">
+                <div class="animated-logo" style="font-size: 6rem; margin-bottom: 2rem;">
+                    <span class="bounce-icon">🪔</span>
+                    <span class="pulse-icon">🎆</span>
+                    <span class="rotate-icon">🎉</span>
+                </div>
+                <h1 class="title-glow mb-4" style="font-family: 'Dancing Script', cursive; font-size: 4rem; color: #FFD700; text-shadow: 3px 3px 10px rgba(0,0,0,0.8), 0 0 30px rgba(255,215,0,0.8);">
+                    🎭 Anonymous Message Portal 🎭
+                </h1>
+                <p style="color: #FFD700; font-size: 1.3rem; margin-bottom: 3rem; text-shadow: 2px 2px 6px rgba(0,0,0,0.8);">
+                    Send anonymous messages to anyone, anywhere!
+                </p>
+                <button class="btn btn-diwali" onclick="showLoginSection()">
+                    🎭 Enter Portal
+                </button>
+            </div>
+            
+            <div id="authSection" class="hidden">
+                <div class="card diwali-card">
+                    <div class="card-body p-5">
+                        <h3 class="text-center mb-4" style="color: #FFD700; font-family: 'Orbitron', monospace; font-weight: 700; text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">
+                            🔐 Enter MFA Authentication Code
+                        </h3>
+                        <form id="authForm">
+                            <div class="mb-4">
+                                <input type="text" class="form-control" id="authCode" placeholder="Enter 6-digit MFA code..." maxlength="6" pattern="[0-9]{6}" required>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-diwali" id="authSubmitBtn">
+                                    <span id="authBtnText">🔐 Verify MFA Code</span>
+                                    <span id="authLoader" class="loading hidden"></span>
+                                </button>
+                            </div>
+                        </form>
+                        <div id="authMessage" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="emailSection" class="hidden">
+                <div class="card diwali-card">
+                    <div class="card-body p-5">
+                        <h3 class="text-center mb-4" style="color: #FFD700; font-family: 'Orbitron', monospace; font-weight: 700; text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">
+                            📝 Send Anonymous Message
+                        </h3>
+                        <form id="emailForm">
+                            <div class="mb-3">
+                                <label class="form-label" style="color: #FFD700; font-weight: 600; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">👥 Select or Search Recipient</label>
+                                <div style="position: relative;">
+                                    <input type="text" class="form-control" id="recipientInput" placeholder="Type to search or click dropdown..." autocomplete="off" required>
+                                    <div id="dropdownArrow" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #FFD700; font-size: 12px;">▼</div>
+                                    <div id="recipientDropdown" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: rgba(0,0,0,0.95); border: 2px solid #FFD700; border-radius: 10px; max-height: 200px; overflow-y: auto; z-index: 1000;"></div>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label" style="color: #FFD700; font-weight: 600; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">💬 Your Anonymous Message</label>
+                                <textarea class="form-control" id="content" rows="5" placeholder="Type your anonymous message here..." required></textarea>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-diwali" id="emailSubmitBtn">
+                                    <span id="emailBtnText">📧 Send Anonymous Message</span>
+                                    <span id="emailLoader" class="loading hidden"></span>
+                                </button>
+                            </div>
+                        </form>
+                        <div id="emailMessage" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        let soundEnabled = true;
+        let audioContext = null;
+        
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+        }
+        
+        function playBeep(frequency = 600, duration = 80) {
+            if (!soundEnabled) return;
+            try {
+                initAudio();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = frequency;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.05, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration/1000);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + duration/1000);
+            } catch(e) {}
+        }
+        
+        function playFirecrackerSound() {
+            if (!soundEnabled) return;
+            try {
+                initAudio();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 400;
+                oscillator.type = 'square';
+                
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.2);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.2);
+            } catch(e) {}
+        }
+        
+        function startBackgroundFirecrackers() {
+            let lastFirecracker = 0;
+            
+            setInterval(() => {
+                const now = Date.now();
+                if (soundEnabled && now - lastFirecracker > 25000 && Math.random() < 0.3) {
+                    playFirecrackerSound();
+                    lastFirecracker = now;
+                }
+            }, 30000);
+        }
+        
+        function playWelcome() {
+            if (!soundEnabled) return;
+            const notes = [523, 659, 784, 1047];
+            notes.forEach((freq, i) => {
+                setTimeout(() => playBeep(freq, 400), i * 300);
+            });
+            
+            // Voice message
+            setTimeout(() => {
+                speakText("Welcome to the Mystery Diwali Messenger! You are now invisible! Time to spread some anonymous joy!");
+            }, 1000);
+        }
+        
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const btn = document.getElementById('soundBtn');
+            if (soundEnabled) {
+                btn.innerHTML = '<i class="fas fa-volume-up"></i> Sound ON';
+                btn.style.background = 'linear-gradient(45deg, #4CAF50, #45a049)';
+                playBeep(800, 100);
+            } else {
+                btn.innerHTML = '<i class="fas fa-volume-mute"></i> Sound OFF';
+                btn.style.background = 'linear-gradient(45deg, #f44336, #d32f2f)';
+            }
+        }
+        
+        let lastKeySound = 0;
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                const now = Date.now();
+                if (soundEnabled && now - lastKeySound > 500) {
+                    playBeep(500, 50);
+                    lastKeySound = now;
+                }
+            }
+        });
+        
+        document.addEventListener('click', initAudio, { once: true });
+        
+        // Text-to-speech function
+        function speakText(text) {
+            if (!soundEnabled || !('speechSynthesis' in window)) return;
+            
+            speechSynthesis.cancel();
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 1.0;
+            utterance.pitch = 1.0;
+            utterance.volume = 1.0;
+            utterance.lang = 'en-US';
+            
+            const setVoiceAndSpeak = () => {
+                const voices = speechSynthesis.getVoices();
+                const bestVoice = voices.find(voice => 
+                    voice.name.includes('Samantha') ||
+                    voice.name.includes('Alex') ||
+                    voice.name.includes('Karen') ||
+                    voice.name.includes('Daniel')
+                ) || voices.find(voice => 
+                    voice.localService && voice.lang === 'en-US'
+                ) || voices.find(voice => voice.lang === 'en-US');
+                
+                if (bestVoice) utterance.voice = bestVoice;
+                speechSynthesis.speak(utterance);
+            };
+            
+            if (speechSynthesis.getVoices().length > 0) {
+                setVoiceAndSpeak();
+            } else {
+                speechSynthesis.addEventListener('voiceschanged', setVoiceAndSpeak, { once: true });
+            }
+        }
+        
+        // Load voices
+        speechSynthesis.addEventListener('voiceschanged', () => {
+            // Voices loaded
+        });
+        
+        // Fireworks
+        class Firework {
+            constructor(x, y, targetX, targetY) {
+                this.x = x;
+                this.y = y;
+                this.targetX = targetX;
+                this.targetY = targetY;
+                this.speed = 5;
+                this.angle = Math.atan2(targetY - y, targetX - x);
+                this.brightness = Math.random() * 360;
+                this.exploded = false;
+                this.particles = [];
+            }
+            
+            update() {
+                if (!this.exploded) {
+                    this.x += Math.cos(this.angle) * this.speed;
+                    this.y += Math.sin(this.angle) * this.speed;
+                    
+                    if (Math.abs(this.x - this.targetX) < 10 && Math.abs(this.y - this.targetY) < 10) {
+                        this.explode();
+                    }
+                } else {
+                    this.particles.forEach(p => p.update());
+                    this.particles = this.particles.filter(p => p.alpha > 0);
+                }
+            }
+            
+            explode() {
+                this.exploded = true;
+                for (let i = 0; i < 30; i++) {
+                    this.particles.push(new Particle(this.x, this.y, this.brightness));
+                }
+            }
+            
+            draw(ctx) {
+                if (!this.exploded) {
+                    ctx.fillStyle = `hsl(${this.brightness}, 100%, 60%)`;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+                    ctx.fill();
+                } else {
+                    this.particles.forEach(p => p.draw(ctx));
+                }
+            }
+        }
+        
+        class Particle {
+            constructor(x, y, hue) {
+                this.x = x;
+                this.y = y;
+                this.vx = (Math.random() - 0.5) * 8;
+                this.vy = (Math.random() - 0.5) * 8;
+                this.alpha = 1;
+                this.decay = Math.random() * 0.02 + 0.01;
+                this.hue = hue + Math.random() * 60 - 30;
+            }
+            
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.vy += 0.1;
+                this.alpha -= this.decay;
+            }
+            
+            draw(ctx) {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = `hsl(${this.hue}, 100%, 60%)`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+        
+        const canvas = document.getElementById('fireworksCanvas');
+        const ctx = canvas.getContext('2d');
+        let fireworks = [];
+        
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        
+        function spawnFirework() {
+            const startX = Math.random() * canvas.width;
+            const startY = canvas.height;
+            const targetX = Math.random() * canvas.width;
+            const targetY = Math.random() * canvas.height * 0.5;
+            fireworks.push(new Firework(startX, startY, targetX, targetY));
+        }
+        
+        function animate() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            if (Math.random() < 0.05) {
+                spawnFirework();
+            }
+            
+            fireworks.forEach(fw => {
+                fw.update();
+                fw.draw(ctx);
+            });
+            
+            fireworks = fireworks.filter(fw => !fw.exploded || fw.particles.length > 0);
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+        
+        function celebrate(count = 5) {
+            for (let i = 0; i < count; i++) {
+                setTimeout(spawnFirework, i * 200);
+            }
+            playWelcome();
+        }
+        
+
+        
+        function showValidationError(message) {
+            const overlay = document.createElement('div');
+            overlay.className = 'validation-overlay';
+            overlay.innerHTML = `
+                <div class="validation-popup">
+                    <div style="font-size: 3rem; margin-bottom: 15px;">⚠️</div>
+                    <div>${message}</div>
+                    <button onclick="this.parentElement.parentElement.remove()" 
+                            style="margin-top: 20px; padding: 10px 25px; background: white; color: #000; border: none; border-radius: 15px; font-weight: bold; cursor: pointer;">
+                        OK
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+            
+            setTimeout(() => {
+                if (overlay.parentElement) overlay.remove();
+            }, 5000);
+        }
+        
+        function validateAuthCode(code) {
+            return code && /^[0-9]{6}$/.test(code);
+        }
+        
+        function validateRecipient() {
+            const email = document.getElementById('recipientInput').value;
+            return email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+        
+        function validateContent(content) {
+            return content && content.length >= 10;
+        }
+        
+
+        
+        let allContacts = [];
+        
+        // Load contacts
+        async function loadContacts() {
+            try {
+                const response = await fetch('/get_contacts');
+                allContacts = await response.json();
+                setupDropdown();
+            } catch (error) {
+                console.log('Could not load contacts');
+            }
+        }
+        
+        function setupDropdown() {
+            const input = document.getElementById('recipientInput');
+            const dropdown = document.getElementById('recipientDropdown');
+            const arrow = document.getElementById('dropdownArrow');
+            
+            // Show all contacts on focus/click
+            input.addEventListener('focus', () => showDropdown());
+            arrow.addEventListener('click', () => {
+                input.focus();
+                showDropdown();
+            });
+            
+            // Filter on input
+            input.addEventListener('input', (e) => {
+                const filter = e.target.value.toLowerCase();
+                showDropdown(filter);
+            });
+            
+            // Hide dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.mb-3')) {
+                    dropdown.style.display = 'none';
+                }
+            });
+        }
+        
+        function showDropdown(filter = '') {
+            const dropdown = document.getElementById('recipientDropdown');
+            dropdown.innerHTML = '';
+            
+            const filteredContacts = allContacts.filter(contact => 
+                contact.name.toLowerCase().includes(filter) || 
+                contact.email.toLowerCase().includes(filter)
+            );
+            
+            filteredContacts.forEach(contact => {
+                const item = document.createElement('div');
+                item.style.cssText = 'padding: 12px 15px; cursor: pointer; color: #fff; border-bottom: 1px solid rgba(255,215,0,0.2); transition: background 0.2s;';
+                item.innerHTML = `<strong>${contact.name}</strong><br><small style="color: #ccc;">${contact.email}</small>`;
+                
+                item.addEventListener('mouseenter', () => {
+                    item.style.background = 'rgba(255,215,0,0.2)';
+                });
+                
+                item.addEventListener('mouseleave', () => {
+                    item.style.background = 'transparent';
+                });
+                
+                item.addEventListener('click', () => {
+                    document.getElementById('recipientInput').value = contact.email;
+                    dropdown.style.display = 'none';
+                });
+                
+                dropdown.appendChild(item);
+            });
+            
+            dropdown.style.display = filteredContacts.length > 0 ? 'block' : 'none';
+        }
+        
+        // Initialize welcome page
+        window.addEventListener('load', () => {
+            startBackgroundFirecrackers();
+            setTimeout(() => {
+                speakText("Welcome to the Anonymous Message Portal! Here you can send completely anonymous messages to anyone without revealing your identity. Click Enter Portal to begin your anonymous messaging experience.");
+            }, 1000);
+        });
+        
+        // Navigation functions
+        function showLoginSection() {
+            document.getElementById('welcomeSection').classList.add('hidden');
+            document.getElementById('authSection').classList.remove('hidden');
+            speakText("Enter your 6-digit MFA authentication code to unlock the portal. Once inside, you can send any message to anyone while staying completely anonymous.");
+        }
+        
+        function showEmailSection() {
+            document.getElementById('authSection').classList.add('hidden');
+            document.getElementById('emailSection').classList.remove('hidden');
+        }
+        
+        function showWelcomeSection() {
+            document.getElementById('emailSection').classList.add('hidden');
+            document.getElementById('authSection').classList.add('hidden');
+            document.getElementById('welcomeSection').classList.remove('hidden');
+        }
+        
+        // Forms
+        document.getElementById('authForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const authCode = document.getElementById('authCode').value.trim();
+            const btnText = document.getElementById('authBtnText');
+            const loader = document.getElementById('authLoader');
+            const messageDiv = document.getElementById('authMessage');
+            const submitBtn = document.getElementById('authSubmitBtn');
+            
+            if (!validateAuthCode(authCode)) return;
+            
+            submitBtn.disabled = true;
+            btnText.style.display = 'none';
+            loader.style.display = 'inline-block';
+            
+            try {
+                const response = await fetch('/authenticate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ auth_code: authCode })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    celebrate(8);
+                    messageDiv.innerHTML = `
+                        <div class="alert celebration-alert text-center">
+                            <h4 class="text-success mb-3">
+                                <i class="fas fa-user-secret"></i> ANONYMOUS MODE ACTIVATED! <i class="fas fa-user-secret"></i>
+                            </h4>
+                            <p class="text-success">🎭 You are now completely anonymous! Ready to send secret messages... 🎭</p>
+                            <div style="font-size: 2em;">🎆🎊🎆</div>
+                        </div>
+                    `;
+                    
+                    setTimeout(() => {
+                        showEmailSection();
+                        loadContacts();
+                        
+                        setTimeout(() => {
+                            speakText("Access granted! You are now anonymous! Send any message to anyone - confessions, compliments, secrets, or anything you want. Your identity is completely protected.");
+                        }, 500);
+                    }, 2000);
+                } else {
+                    showValidationError(`🚫 ${result.message}`);
+                }
+            } catch (error) {
+                showValidationError('🌐 Network error occurred. Please try again.');
+            } finally {
+                submitBtn.disabled = false;
+                btnText.style.display = 'inline';
+                loader.style.display = 'none';
+            }
+        });
+        
+        document.getElementById('emailForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // recipient already defined above
+            const content = document.getElementById('content').value.trim();
+            const btnText = document.getElementById('emailBtnText');
+            const loader = document.getElementById('emailLoader');
+            const messageDiv = document.getElementById('emailMessage');
+            
+            const recipient = document.getElementById('recipientInput').value.trim();
+            const isValidRecipient = validateRecipient();
+            const isValidContent = validateContent(content);
+            const submitBtn = document.getElementById('emailSubmitBtn');
+            
+            if (!isValidRecipient || !isValidContent) {
+                return;
+            }
+            
+            submitBtn.disabled = true;
+            btnText.style.display = 'none';
+            loader.style.display = 'inline-block';
+            
+            try {
+                const response = await fetch('/send_email', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ recipient, subject: 'Anonymous Message', content })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    celebrate(12);
+                    
+                    // Encouraging voice messages
+                    const encouragingMessages = [
+                        "Perfect! Your anonymous message has been sent successfully! No one will ever know it was you!",
+                        "Mission accomplished! Your secret message is now traveling anonymously through the digital world!",
+                        "Excellent! Another anonymous message delivered! You remain completely invisible!",
+                        "Success! Your anonymous communication has been deployed! Your identity stays protected!"
+                    ];
+                    
+                    const randomMessage = encouragingMessages[Math.floor(Math.random() * encouragingMessages.length)];
+                    
+                    setTimeout(() => {
+                        speakText(randomMessage + " Thank you for spreading joy this Diwali! Ready for your next secret mission?");
+                    }, 1000);
+                    
+                    messageDiv.innerHTML = `
+                        <div class="alert celebration-alert text-center">
+                            <div style="font-size: 3em; margin: 15px 0;">🎆🚀🎆</div>
+                            <h4 class="text-success mb-3">ANONYMOUS MESSAGE SENT! 📧</h4>
+                            <p class="text-success">🎭 Your anonymous message is traveling through the digital world! 🎭</p>
+                            <p class="text-success">🔒 Your identity remains completely protected and secret! 🔒</p>
+                            <div style="font-size: 2em; margin: 15px 0;">🎊🎉🎊</div>
+                        </div>
+                    `;
+                    
+                    setTimeout(() => {
+                        speakText("Thank you for using the Anonymous Message Portal! Your message has been delivered while keeping your identity completely secret. Feel free to send more anonymous messages anytime!");
+                        
+                        setTimeout(() => {
+                            showWelcomeSection();
+                            document.getElementById('authForm').reset();
+                            document.getElementById('emailForm').reset();
+                            document.getElementById('recipientInput').value = '';
+                            document.getElementById('authMessage').innerHTML = '';
+                            messageDiv.innerHTML = '';
+                            
+                            // Clear validation states
+                            ['authCode', 'recipientInput', 'content'].forEach(id => {
+                                const input = document.getElementById(id);
+                                input.classList.remove('error', 'success');
+                            });
+                        }, 3000);
+                    }, 2000);
+                } else {
+                    messageDiv.innerHTML = `<div class="alert alert-danger">${result.message}</div>`;
+                }
+            } catch (error) {
+                messageDiv.innerHTML = `<div class="alert alert-danger">Network error occurred.</div>`;
+            } finally {
+                submitBtn.disabled = false;
+                btnText.style.display = 'inline';
+                loader.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,5 +1,5 @@
-colorama
-cryptography
+flask
 pandas
 openpyxl
-streamlit
+cryptography
+pygame
