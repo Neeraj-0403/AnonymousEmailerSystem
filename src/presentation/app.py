@@ -4,6 +4,10 @@ import os
 from flask import Flask, render_template, request, jsonify
 import pygame
 import pyotp
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Add the project root to the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -96,6 +100,13 @@ def send_email():
         
         if not recipient or not subject or not content:
             return jsonify({'success': False, 'message': 'Please fill in all fields.'})
+        
+        # Check for inappropriate content FIRST
+        if ai_service.check_for_abuse(content):
+            return jsonify({
+                'success': False, 
+                'message': 'Your message contains inappropriate, abusive, or sexual content. Please modify your message to be respectful and appropriate.'
+            })
         
         is_queued = email_service.queue_email_for_sending(recipient, subject, content)
         
