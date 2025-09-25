@@ -97,6 +97,70 @@
             transition: all 0.4s ease;
             max-width: 500px;
             width: 100%;
+            position: relative;
+        }
+        
+        #emailSection .diwali-card {
+            max-width: 650px;
+        }
+        
+        .firecracker-border {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: linear-gradient(45deg, #ff6b35, #ffd700, #ff1744);
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.9), 0 0 15px rgba(255, 107, 53, 0.6);
+        }
+        
+        .firecracker-border:nth-child(1) {
+            top: 50%; left: 50%;
+            animation: orbit-1 4s linear infinite;
+        }
+        .firecracker-border:nth-child(2) {
+            top: 50%; left: 50%;
+            animation: orbit-2 4s linear infinite;
+        }
+        .firecracker-border:nth-child(3) {
+            top: 50%; left: 50%;
+            animation: orbit-3 4s linear infinite;
+        }
+        .firecracker-border:nth-child(4) {
+            top: 50%; left: 50%;
+            animation: orbit-4 4s linear infinite;
+        }
+        .firecracker-border:nth-child(5) {
+            top: 50%; left: 50%;
+            animation: orbit-5 4s linear infinite;
+        }
+        .firecracker-border:nth-child(6) {
+            top: 50%; left: 50%;
+            animation: orbit-6 4s linear infinite;
+        }
+        
+        @keyframes orbit-1 {
+            0% { transform: translate(-50%, -50%) rotate(0deg) translateX(280px) rotate(0deg) scale(1); }
+            100% { transform: translate(-50%, -50%) rotate(360deg) translateX(280px) rotate(-360deg) scale(1.2); }
+        }
+        @keyframes orbit-2 {
+            0% { transform: translate(-50%, -50%) rotate(60deg) translateX(280px) rotate(-60deg) scale(1); }
+            100% { transform: translate(-50%, -50%) rotate(420deg) translateX(280px) rotate(-420deg) scale(1.2); }
+        }
+        @keyframes orbit-3 {
+            0% { transform: translate(-50%, -50%) rotate(120deg) translateX(280px) rotate(-120deg) scale(1); }
+            100% { transform: translate(-50%, -50%) rotate(480deg) translateX(280px) rotate(-480deg) scale(1.2); }
+        }
+        @keyframes orbit-4 {
+            0% { transform: translate(-50%, -50%) rotate(180deg) translateX(280px) rotate(-180deg) scale(1); }
+            100% { transform: translate(-50%, -50%) rotate(540deg) translateX(280px) rotate(-540deg) scale(1.2); }
+        }
+        @keyframes orbit-5 {
+            0% { transform: translate(-50%, -50%) rotate(240deg) translateX(280px) rotate(-240deg) scale(1); }
+            100% { transform: translate(-50%, -50%) rotate(600deg) translateX(280px) rotate(-600deg) scale(1.2); }
+        }
+        @keyframes orbit-6 {
+            0% { transform: translate(-50%, -50%) rotate(300deg) translateX(280px) rotate(-300deg) scale(1); }
+            100% { transform: translate(-50%, -50%) rotate(660deg) translateX(280px) rotate(-660deg) scale(1.2); }
         }
         
         .diwali-card:hover {
@@ -219,6 +283,16 @@
             color: rgba(255, 255, 255, 0.6);
         }
         
+        .form-control[contenteditable]:empty:before {
+            content: attr(data-placeholder);
+            color: rgba(255, 255, 255, 0.6);
+            font-style: italic;
+        }
+        
+        .form-control[contenteditable]:focus:before {
+            content: none;
+        }
+        
         .form-control.error {
             border-color: #FFD700;
             box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
@@ -316,6 +390,13 @@
             color: #000;
         }
         
+        #content:focus {
+            background: rgba(255, 255, 255, 0.98) !important;
+            color: #000 !important;
+            min-height: 200px !important;
+            max-height: 200px !important;
+        }
+        
         .title-glow {
             background: linear-gradient(45deg, #ff6b35, #f7931e, #ffcc02, #ffd700);
             -webkit-background-clip: text;
@@ -327,6 +408,11 @@
         @keyframes glow {
             from { filter: drop-shadow(0 0 20px rgba(255,215,0,0.5)); }
             to { filter: drop-shadow(0 0 30px rgba(255,215,0,0.8)); }
+        }
+        
+        @keyframes logo-pulse {
+            0% { transform: scale(1); filter: drop-shadow(0 0 15px rgba(255,215,0,0.6)); }
+            100% { transform: scale(1.05); filter: drop-shadow(0 0 25px rgba(255,215,0,1)); }
         }
         
         .sound-toggle {
@@ -440,10 +526,22 @@
     </button>
     
     <!-- Logo Header -->
-    <div class="position-fixed top-0 start-0 p-3" style="z-index: 1000;">
-        <h2 class="text-gradient mb-0" style="font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); color: #FFD700; font-family: 'Orbitron', monospace;">
-            <i class="fas fa-graduation-cap me-2"></i>DITS Confess
+    <div class="position-fixed top-0 start-0 p-3" style="z-index: 1000; background: rgba(0,0,0,0.7); border-radius: 15px; backdrop-filter: blur(10px);">
+        <h2 class="mb-0" style="font-weight: 900; color: #FFD700; text-shadow: 3px 3px 8px rgba(0,0,0,0.9), 0 0 25px rgba(255,215,0,0.8); font-family: 'Orbitron', monospace; font-size: 1.8rem; animation: logo-pulse 2s ease-in-out infinite alternate;">
+            <i class="fas fa-user-secret me-2" style="color: #FFD700; filter: drop-shadow(0 0 15px rgba(255,215,0,0.8));"></i>DITS Confession
         </h2>
+    </div>
+
+    <!-- Content Restrictions Notification -->
+    <div id="restrictionsNotification" class="position-fixed" style="top: 80px; right: 20px; z-index: 1050; display: none;">
+        <div class="card diwali-card border-0 shadow-lg" style="max-width: 300px;">
+            <div class="card-body p-3">
+                <h6 class="text-warning mb-2">🚫 Content Restrictions</h6>
+                <small class="text-light">
+                    Cannot send: Abuse, Sexual content, Threats, Spam, Illegal activities
+                </small>
+            </div>
+        </div>
     </div>
 
     <div class="main-container">
@@ -467,17 +565,23 @@
             
             <div id="authSection" class="hidden">
                 <div class="card diwali-card">
+                    <div class="firecracker-border"></div>
+                    <div class="firecracker-border"></div>
+                    <div class="firecracker-border"></div>
+                    <div class="firecracker-border"></div>
+                    <div class="firecracker-border"></div>
+                    <div class="firecracker-border"></div>
                     <div class="card-body p-5">
                         <h3 class="text-center mb-4" style="color: #FFD700; font-family: 'Orbitron', monospace; font-weight: 700; text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">
-                            🔐 Enter MFA Authentication Code
+                            🔐 Enter Your Secret Code
                         </h3>
                         <form id="authForm">
                             <div class="mb-4">
-                                <input type="text" class="form-control" id="authCode" placeholder="Enter 6-digit MFA code..." maxlength="6" pattern="[0-9]{6}" required>
+                                <input type="text" class="form-control" id="authCode" placeholder="Enter 6-digit secret Code..." maxlength="6" pattern="[0-9]{6}" required autocomplete="off" onfocus="this.placeholder=''" onblur="if(this.value=='') this.placeholder='Enter 6-digit secret key...'">
                             </div>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-diwali" id="authSubmitBtn">
-                                    <span id="authBtnText">🔐 Verify MFA Code</span>
+                                    <span id="authBtnText">🔐 Verify Secret Code</span>
                                     <span id="authLoader" class="loading hidden"></span>
                                 </button>
                             </div>
@@ -488,6 +592,12 @@
             
             <div id="successSection" class="hidden">
                 <div class="card diwali-card">
+                    <div class="firecracker-border"></div>
+                    <div class="firecracker-border"></div>
+                    <div class="firecracker-border"></div>
+                    <div class="firecracker-border"></div>
+                    <div class="firecracker-border"></div>
+                    <div class="firecracker-border"></div>
                     <div class="card-body p-5 text-center">
                         <div style="font-size: 4rem; margin-bottom: 2rem;">
                             <span class="bounce-icon">🎉</span>
@@ -509,6 +619,12 @@
             
             <div id="emailSection" class="hidden">
                 <div class="card diwali-card">
+                    <div class="firecracker-border"></div>
+                    <div class="firecracker-border"></div>
+                    <div class="firecracker-border"></div>
+                    <div class="firecracker-border"></div>
+                    <div class="firecracker-border"></div>
+                    <div class="firecracker-border"></div>
                     <div class="card-body p-5">
                         <h3 class="text-center mb-4" style="color: #FFD700; font-family: 'Orbitron', monospace; font-weight: 700; text-shadow: 2px 2px 8px rgba(0,0,0,0.8);">
                             📝 Send Anonymous Message
@@ -517,7 +633,7 @@
                             <div class="mb-3">
                                 <label class="form-label" style="color: #FFD700; font-weight: 600; text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">👥 Select or Search Recipient</label>
                                 <div style="position: relative;">
-                                    <input type="text" class="form-control" id="recipientInput" placeholder="📧 Type to search or click dropdown..." autocomplete="off" required>
+                                    <input type="text" class="form-control" id="recipientInput" placeholder="📧 Type to search or click dropdown..." autocomplete="off" required onfocus="this.placeholder=''" onblur="if(this.value=='') this.placeholder='📧 Type to search or click dropdown...'">
                                     <div id="dropdownArrow" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #FFD700; font-size: 12px;">▼</div>
                                     <div id="recipientDropdown" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: rgba(0,0,0,0.95); border: 2px solid #FFD700; border-radius: 10px; max-height: 200px; overflow-y: auto; z-index: 1000;"></div>
                                 </div>
@@ -533,7 +649,7 @@
                                         <button type="button" onclick="formatText('~~', '~~')" style="background: rgba(255,215,0,0.2); border: 1px solid #FFD700; border-radius: 5px; padding: 5px 10px; color: #FFD700; cursor: pointer; text-decoration: line-through;">S</button>
                                         <button type="button" onclick="toggleEmojiPicker()" style="background: rgba(255,215,0,0.2); border: 1px solid #FFD700; border-radius: 5px; padding: 5px 10px; color: #FFD700; cursor: pointer; font-size: 14px;">😀</button>
                                     </div>
-                                    <textarea class="form-control" id="content" rows="5" placeholder="🎭 Type your anonymous message here... Use formatting buttons above! Share secrets, confessions, compliments, or anything! 🤫" required></textarea>
+                                    <div class="form-control" id="content" contenteditable="true" style="height: 200px !important; min-height: 200px !important; max-height: 200px !important; overflow-y: auto; white-space: pre-wrap; text-align: left; box-sizing: border-box;" data-placeholder="🎭 Type your anonymous message here... Use formatting buttons above! Share secrets, confessions, compliments, or anything! 🤫" onblur="updatePlaceholder()" onfocus="updatePlaceholder()"></div>
                                     <div id="emojiPicker" style="display: none; position: absolute; top: 100%; right: 0; background: rgba(0,0,0,0.95); border: 2px solid #FFD700; border-radius: 10px; padding: 15px; z-index: 1000; max-width: 400px;">
                                         <div style="display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; max-height: 250px; overflow-y: auto;">
                                             <span onclick="addEmoji('😀')" class="emoji-btn">😀</span><span onclick="addEmoji('😃')" class="emoji-btn">😃</span><span onclick="addEmoji('😄')" class="emoji-btn">😄</span><span onclick="addEmoji('😁')" class="emoji-btn">😁</span><span onclick="addEmoji('😆')" class="emoji-btn">😆</span>
@@ -580,6 +696,12 @@
             
             <div id="finalSuccessSection" class="hidden">
                 <div class="card diwali-card">
+                    <div class="firecracker-border"></div>
+                    <div class="firecracker-border"></div>
+                    <div class="firecracker-border"></div>
+                    <div class="firecracker-border"></div>
+                    <div class="firecracker-border"></div>
+                    <div class="firecracker-border"></div>
                     <div class="card-body p-5 text-center">
                         <div style="font-size: 4rem; margin-bottom: 2rem;">
                             <span class="bounce-icon">🎆</span>
@@ -606,7 +728,7 @@
         <!-- Copyright Footer -->
         <div class="position-fixed bottom-0 start-0 end-0 text-center p-2" style="background: rgba(0,0,0,0.3); backdrop-filter: blur(10px); z-index: 999;">
             <small class="text-light">
-                © 2025 DITS Confess - Anonymous Message Portal. All rights reserved.
+                © 2025 DITS confession - Anonymous Message Portal. All rights reserved.
             </small>
         </div>
 
@@ -645,24 +767,43 @@
             }
         }
         
-        function playBeep(frequency = 600, duration = 80) {
+        function playBeep(frequency = 440, duration = 150) {
             if (!soundEnabled) return;
             try {
                 initAudio();
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
                 
-                oscillator.connect(gainNode);
+                // Create multiple oscillators for richer sound
+                const osc1 = audioContext.createOscillator();
+                const osc2 = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                const filter = audioContext.createBiquadFilter();
+                
+                // Main tone
+                osc1.frequency.value = frequency;
+                osc1.type = 'sawtooth';
+                
+                // Harmonic
+                osc2.frequency.value = frequency * 1.5;
+                osc2.type = 'sine';
+                
+                // Filter for warmth
+                filter.type = 'lowpass';
+                filter.frequency.value = frequency * 2;
+                
+                osc1.connect(filter);
+                osc2.connect(filter);
+                filter.connect(gainNode);
                 gainNode.connect(audioContext.destination);
                 
-                oscillator.frequency.value = frequency;
-                oscillator.type = 'sine';
-                
-                gainNode.gain.setValueAtTime(0.05, audioContext.currentTime);
+                // Natural envelope
+                gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.03, audioContext.currentTime + 0.01);
                 gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration/1000);
                 
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + duration/1000);
+                osc1.start(audioContext.currentTime);
+                osc2.start(audioContext.currentTime);
+                osc1.stop(audioContext.currentTime + duration/1000);
+                osc2.stop(audioContext.currentTime + duration/1000);
             } catch(e) {}
         }
         
@@ -670,20 +811,27 @@
             if (!soundEnabled) return;
             try {
                 initAudio();
-                const oscillator = audioContext.createOscillator();
+                const osc = audioContext.createOscillator();
                 const gainNode = audioContext.createGain();
+                const filter = audioContext.createBiquadFilter();
                 
-                oscillator.connect(gainNode);
+                osc.connect(filter);
+                filter.connect(gainNode);
                 gainNode.connect(audioContext.destination);
                 
-                oscillator.frequency.value = 400;
-                oscillator.type = 'square';
+                // Pop sound
+                osc.frequency.setValueAtTime(200, audioContext.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(80, audioContext.currentTime + 0.05);
+                osc.type = 'sawtooth';
                 
-                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.2);
+                filter.type = 'bandpass';
+                filter.frequency.value = 300;
                 
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + 0.2);
+                gainNode.gain.setValueAtTime(0.08, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.08);
+                
+                osc.start(audioContext.currentTime);
+                osc.stop(audioContext.currentTime + 0.08);
             } catch(e) {}
         }
         
@@ -701,15 +849,9 @@
         
         function playWelcome() {
             if (!soundEnabled) return;
-            const notes = [523, 659, 784, 1047];
-            notes.forEach((freq, i) => {
-                setTimeout(() => playBeep(freq, 400), i * 300);
-            });
-            
-            // Voice message
-            setTimeout(() => {
-                speakText("Welcome to the Mystery Diwali Messenger! You are now invisible! Time to spread some anonymous joy!");
-            }, 1000);
+            // Friendly notification sound
+            playBeep(523, 120); // C note
+            setTimeout(() => playBeep(659, 100), 150); // E note
         }
         
         function toggleSound() {
@@ -718,7 +860,7 @@
             if (soundEnabled) {
                 btn.innerHTML = '<i class="fas fa-volume-up"></i> Sound ON';
                 btn.style.background = 'linear-gradient(45deg, #4CAF50, #45a049)';
-                playBeep(800, 100);
+                playBeep(800, 50);
             } else {
                 btn.innerHTML = '<i class="fas fa-volume-mute"></i> Sound OFF';
                 btn.style.background = 'linear-gradient(45deg, #f44336, #d32f2f)';
@@ -729,8 +871,8 @@
         document.addEventListener('keydown', (e) => {
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
                 const now = Date.now();
-                if (soundEnabled && now - lastKeySound > 500) {
-                    playBeep(500, 50);
+                if (soundEnabled && now - lastKeySound > 200) {
+                    playBeep(500, 30);
                     lastKeySound = now;
                 }
             }
@@ -745,9 +887,9 @@
             speechSynthesis.cancel();
             
             const utterance = new SpeechSynthesisUtterance(text);
-            utterance.rate = 0.8;
-            utterance.pitch = 0.9;
-            utterance.volume = 0.9;
+            utterance.rate = 1.4;
+            utterance.pitch = 1.1;
+            utterance.volume = 0.8;
             utterance.lang = 'en-US';
             
             const setVoiceAndSpeak = () => {
@@ -1029,7 +1171,12 @@
             // Clear content error on typing
             document.getElementById('content').addEventListener('input', () => {
                 clearContentError();
+                updatePlaceholder();
             });
+            
+            // Update button states on selection change
+            document.getElementById('content').addEventListener('keyup', updateFormatButtons);
+            document.getElementById('content').addEventListener('mouseup', updateFormatButtons);
             
             // Hide dropdown when clicking outside
             document.addEventListener('click', (e) => {
@@ -1074,17 +1221,62 @@
         
         // Text formatting functions
         function formatText(startTag, endTag) {
-            const textarea = document.getElementById('content');
-            const start = textarea.selectionStart;
-            const end = textarea.selectionEnd;
-            const selectedText = textarea.value.substring(start, end);
-            const beforeText = textarea.value.substring(0, start);
-            const afterText = textarea.value.substring(end);
+            const contentDiv = document.getElementById('content');
+            contentDiv.focus();
             
-            const newText = beforeText + startTag + selectedText + endTag + afterText;
-            textarea.value = newText;
-            textarea.focus();
-            textarea.setSelectionRange(start + startTag.length, end + startTag.length);
+            const command = startTag === '**' ? 'bold' : 
+                           startTag === '_' ? 'italic' : 
+                           startTag === '__' ? 'underline' : 
+                           startTag === '~~' ? 'strikeThrough' : null;
+            
+            if (command) {
+                document.execCommand(command, false, null);
+                updateFormatButtons();
+            }
+        }
+        
+        function updateFormatButtons() {
+            try {
+                const buttons = document.querySelectorAll('[onclick*="formatText"]');
+                
+                // Check formatting states
+                const isBold = document.queryCommandState('bold');
+                const isItalic = document.queryCommandState('italic');
+                const isUnderline = document.queryCommandState('underline');
+                const isStrikethrough = document.queryCommandState('strikeThrough');
+                
+                // Update button appearances
+                if (buttons[0]) {
+                    buttons[0].style.background = isBold ? 'rgba(255,215,0,0.7)' : 'rgba(255,215,0,0.2)';
+                    buttons[0].style.boxShadow = isBold ? 'inset 0 2px 4px rgba(0,0,0,0.3)' : 'none';
+                }
+                if (buttons[1]) {
+                    buttons[1].style.background = isItalic ? 'rgba(255,215,0,0.7)' : 'rgba(255,215,0,0.2)';
+                    buttons[1].style.boxShadow = isItalic ? 'inset 0 2px 4px rgba(0,0,0,0.3)' : 'none';
+                }
+                if (buttons[2]) {
+                    buttons[2].style.background = isUnderline ? 'rgba(255,215,0,0.7)' : 'rgba(255,215,0,0.2)';
+                    buttons[2].style.boxShadow = isUnderline ? 'inset 0 2px 4px rgba(0,0,0,0.3)' : 'none';
+                }
+                if (buttons[3]) {
+                    buttons[3].style.background = isStrikethrough ? 'rgba(255,215,0,0.7)' : 'rgba(255,215,0,0.2)';
+                    buttons[3].style.boxShadow = isStrikethrough ? 'inset 0 2px 4px rgba(0,0,0,0.3)' : 'none';
+                }
+            } catch(e) {}
+        }
+        
+        function updatePlaceholder() {
+            const contentDiv = document.getElementById('content');
+            if (contentDiv.textContent.trim() === '') {
+                contentDiv.classList.add('empty');
+            } else {
+                contentDiv.classList.remove('empty');
+            }
+        }
+        
+        function getContentText() {
+            const contentDiv = document.getElementById('content');
+            return contentDiv.textContent || contentDiv.innerText || '';
         }
         
         // Emoji picker functions
@@ -1094,14 +1286,14 @@
         }
         
         function addEmoji(emoji) {
-            const textarea = document.getElementById('content');
-            const cursorPos = textarea.selectionStart;
-            const textBefore = textarea.value.substring(0, cursorPos);
-            const textAfter = textarea.value.substring(cursorPos);
-            textarea.value = textBefore + emoji + textAfter;
-            textarea.focus();
-            textarea.setSelectionRange(cursorPos + emoji.length, cursorPos + emoji.length);
+            const contentDiv = document.getElementById('content');
+            contentDiv.focus();
+            
+            // Insert emoji at cursor position
+            document.execCommand('insertText', false, emoji);
+            
             document.getElementById('emojiPicker').style.display = 'none';
+            updatePlaceholder();
         }
         
         // Hide emoji picker when clicking outside
@@ -1115,8 +1307,10 @@
         window.addEventListener('load', () => {
             startBackgroundFirecrackers();
             setTimeout(() => {
-                speakText("Welcome to the Anonymous Message Portal! Here you can send completely anonymous messages to anyone without revealing your identity. Click Enter Portal to begin your anonymous messaging experience.");
+                speakText("Hey there, secret agent! Ready to send some sneaky messages?");
             }, 1000);
+            
+
         });
         
         // Navigation functions
@@ -1128,7 +1322,7 @@
             addTimeout(() => {
                 document.getElementById('welcomeSection').classList.add('hidden');
                 document.getElementById('authSection').classList.remove('hidden');
-                speakText("Enter your 6-digit MFA authentication code to unlock the portal. Once inside, you can send any message to anyone while staying completely anonymous.");
+                speakText("Time for the secret code! Don't worry, I won't tell anyone.");
             }, 400);
         }
         
@@ -1138,8 +1332,10 @@
         }
         
         function showEmailSection() {
+            document.getElementById('authSection').classList.add('hidden');
             document.getElementById('successSection').classList.add('hidden');
             document.getElementById('emailSection').classList.remove('hidden');
+            document.getElementById('restrictionsNotification').style.display = 'block';
             
             // Reset email button state
             const emailSubmitBtn = document.getElementById('emailSubmitBtn');
@@ -1165,6 +1361,7 @@
                 document.getElementById('authForm').reset();
                 document.getElementById('emailForm').reset();
                 document.getElementById('recipientInput').value = '';
+                document.getElementById('authCode').placeholder = 'Enter 6-digit secret Code...';
                 document.getElementById('emailMessage').innerHTML = '';
                 
                 // Reset MFA button state
@@ -1197,6 +1394,7 @@
             document.getElementById('successSection').classList.add('hidden');
             document.getElementById('finalSuccessSection').classList.add('hidden');
             document.getElementById('welcomeSection').classList.remove('hidden');
+            document.getElementById('restrictionsNotification').style.display = 'none';
         }
         
         // Forms
@@ -1231,16 +1429,12 @@
                 
                 if (result.success) {
                     celebrate(8);
-                    showSuccessSection();
+                    speakText("Boom! You're invisible now. Go wild!");
                     
                     addTimeout(() => {
-                        speakText("Access granted! You are now anonymous! Send any message to anyone - confessions, compliments, secrets, or anything you want. Your identity is completely protected.");
-                        
-                        addTimeout(() => {
-                            showEmailSection();
-                            loadContacts();
-                        }, 8000);
-                    }, 500);
+                        showEmailSection();
+                        loadContacts();
+                    }, 1000);
                 } else {
                     showValidationError(`🚫 ${result.message}`);
                     // Re-enable button on error
@@ -1261,7 +1455,7 @@
             e.preventDefault();
             
             // recipient already defined above
-            const content = document.getElementById('content').value.trim();
+            const content = getContentText().trim();
             const btnText = document.getElementById('emailBtnText');
             const loader = document.getElementById('emailLoader');
             const messageDiv = document.getElementById('emailMessage');
@@ -1296,25 +1490,26 @@
                     
                     // Encouraging voice messages
                     const encouragingMessages = [
-                        "Perfect! Your anonymous message has been sent successfully! No one will ever know it was you!",
-                        "Mission accomplished! Your secret message is now traveling anonymously through the digital world!",
-                        "Excellent! Another anonymous message delivered! You remain completely invisible!",
-                        "Success! Your anonymous communication has been deployed! Your identity stays protected!"
+                        "Whoosh! Message sent! You're like a ninja!",
+                        "Boom! Another secret delivered!",
+                        "Nice! Your message is flying under the radar!",
+                        "Sweet! Mission accomplished, agent!"
                     ];
                     
                     const randomMessage = encouragingMessages[Math.floor(Math.random() * encouragingMessages.length)];
                     
                     addTimeout(() => {
-                        speakText(randomMessage + " Thank you for spreading joy this Diwali! Ready for your next secret mission?");
+                        speakText(randomMessage);
                         
                         addTimeout(() => {
-                            speakText("Thank you for using the Anonymous Message Portal! Your message has been delivered while keeping your identity completely secret. Feel free to send more anonymous messages anytime!");
+                            speakText("Want to send another sneaky message?");
                             
                             addTimeout(() => {
                                 showWelcomeSection();
                                 document.getElementById('authForm').reset();
                                 document.getElementById('emailForm').reset();
                                 document.getElementById('recipientInput').value = '';
+                                document.getElementById('authCode').placeholder = 'Enter 6-digit secret Code...';
                                 messageDiv.innerHTML = '';
                                 
                                 // Reset MFA button state
@@ -1338,8 +1533,8 @@
                                     const input = document.getElementById(id);
                                     input.classList.remove('error', 'success');
                                 });
-                            }, 12000);
-                        }, 8000);
+                            }, 5000);
+                        }, 3000);
                     }, 500);
                 } else {
                     showValidationError(`🚫 CONTENT BLOCKED: ${result.message || 'Your message contains inappropriate content. Please modify your message and try again.'}`);
@@ -1348,7 +1543,7 @@
                     document.getElementById('content').style.borderColor = '#ff0000';
                     document.getElementById('content').style.boxShadow = '0 0 20px rgba(255, 0, 0, 0.8)';
                     
-                    speakText("Your message contains inappropriate content and has been blocked. Please modify your message to be respectful and appropriate.");
+                    speakText("Oops! That message is a bit too spicy. Try again!");
                     
                     // Re-enable button on error
                     submitBtn.disabled = false;
