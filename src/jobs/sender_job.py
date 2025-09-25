@@ -7,7 +7,7 @@ from datetime import datetime
 # Add the project root to the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from infrastructure.excel_repository import ExcelRepository
+from infrastructure.csv_repository import CSVRepository
 from infrastructure.email_sender import EmailSender
 from infrastructure.encryption_service import EncryptionService
 from infrastructure.logger import setup_logger, logger
@@ -26,7 +26,7 @@ def run_email_job():
 
         # Initialize infrastructure components
         encryption_service = EncryptionService()
-        email_repository = ExcelRepository(auth_file='auth_codes.xlsx', email_file='emails_to_send.xlsx', encryption_service=encryption_service)
+        email_repository = CSVRepository(auth_file='auth_codes.csv', email_file='emails_to_send.csv', encryption_service=encryption_service)
         email_sender = EmailSender()
 
         # Get the next batch of emails to send (e.g., up to 10 records)

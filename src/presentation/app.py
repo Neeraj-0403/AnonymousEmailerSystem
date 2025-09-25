@@ -14,7 +14,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from application.auth_service import AuthService
 from application.email_service import EmailService
-from infrastructure.excel_repository import ExcelRepository
+from infrastructure.csv_repository import CSVRepository
 from infrastructure.ai_service import AIService
 from infrastructure.encryption_service import EncryptionService
 from infrastructure.logger import setup_logger, logger
@@ -25,14 +25,14 @@ app = Flask(__name__)
 try:
     encryption_service = EncryptionService()
     ai_service = AIService()
-    excel_repository = ExcelRepository(
-        auth_file='auth_codes.xlsx',
-        email_file='emails_to_send.xlsx',
+    csv_repository = CSVRepository(
+        auth_file='auth_codes.csv',
+        email_file='emails_to_send.csv',
         encryption_service=encryption_service
     )
-    auth_service = AuthService(auth_repository=excel_repository)
+    auth_service = AuthService(auth_repository=csv_repository)
     email_service = EmailService(
-        email_repository=excel_repository,
+        email_repository=csv_repository,
         ai_service=ai_service
     )
     
@@ -52,28 +52,39 @@ def authenticate():
         data = request.get_json()
         auth_code = data.get('auth_code', '').strip()
         
+        print(f"DEBUG: Received auth_code: '{auth_code}'")
+        
+        if not auth_code or len(auth_code) != 6:
+            return jsonify({'success': False, 'message': 'Please enter a valid 6-digit MFA code.'})
+        
         # Load TOTP secret
         with open('totp_secret.txt', 'r') as f:
             secret = f.read().strip()
         
+        print(f"DEBUG: Using secret: {secret[:10]}...")
+        
         # Validate TOTP code
         totp = pyotp.TOTP(secret)
-        if totp.verify(auth_code, valid_window=1):
+        current_code = totp.now()
+        print(f"DEBUG: Current valid code: {current_code}")
+        
+        if totp.verify(auth_code, valid_window=2):
             return jsonify({'success': True, 'message': 'MFA Authentication successful!'})
         else:
-            return jsonify({'success': False, 'message': 'Invalid MFA code. Please try again.'})
+            return jsonify({'success': False, 'message': f'Invalid MFA code. Expected: {current_code}'})
     except Exception as e:
         logger.error(f"Authentication error: {e}")
-        return jsonify({'success': False, 'message': 'Authentication failed.'})
+        print(f"DEBUG: Exception: {e}")
+        return jsonify({'success': False, 'message': f'Authentication failed: {str(e)}'})
 
 @app.route('/get_contacts', methods=['GET'])
 def get_contacts():
     try:
         import pandas as pd
-        contacts_file = 'contacts.xlsx'
+        contacts_file = 'contacts.csv'
         
         if os.path.exists(contacts_file):
-            df = pd.read_excel(contacts_file)
+            df = pd.read_csv(contacts_file)
             contacts = []
             for _, row in df.iterrows():
                 contacts.append({
@@ -122,12 +133,12 @@ if __name__ == '__main__':
     # Create sample contacts file if it doesn't exist
     import pandas as pd
     
-    contacts_file = 'contacts.xlsx'
+    contacts_file = 'contacts.csv'
     if not os.path.exists(contacts_file):
         sample_contacts = pd.DataFrame({
             'name': ['Alice Johnson', 'Bob Smith', 'Carol Davis', 'David Wilson', 'Emma Brown'],
             'email': ['alice@example.com', 'bob@example.com', 'carol@example.com', 'david@example.com', 'emma@example.com']
         })
-        sample_contacts.to_excel(contacts_file, index=False)
+        sample_contacts.to_csv(contacts_file, index=False)
     
     app.run(debug=True, port=5000)

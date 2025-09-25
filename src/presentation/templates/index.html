@@ -482,7 +482,6 @@
                                 </button>
                             </div>
                         </form>
-                        <div id="authMessage" class="mt-3"></div>
                     </div>
                 </div>
             </div>
@@ -618,6 +617,24 @@
     <script>
         let soundEnabled = true;
         let audioContext = null;
+        let activeTimeouts = [];
+        
+        function clearAllTimeouts() {
+            activeTimeouts.forEach(timeout => clearTimeout(timeout));
+            activeTimeouts = [];
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+            }
+        }
+        
+        function addTimeout(callback, delay) {
+            const timeoutId = setTimeout(() => {
+                callback();
+                activeTimeouts = activeTimeouts.filter(id => id !== timeoutId);
+            }, delay);
+            activeTimeouts.push(timeoutId);
+            return timeoutId;
+        }
         
         function initAudio() {
             if (!audioContext) {
@@ -1104,10 +1121,11 @@
         
         // Navigation functions
         function showLoginSection() {
+            clearAllTimeouts();
             const btn = document.querySelector('#welcomeSection .btn-diwali');
             animateButtonClick(btn);
             
-            setTimeout(() => {
+            addTimeout(() => {
                 document.getElementById('welcomeSection').classList.add('hidden');
                 document.getElementById('authSection').classList.remove('hidden');
                 speakText("Enter your 6-digit MFA authentication code to unlock the portal. Once inside, you can send any message to anyone while staying completely anonymous.");
@@ -1122,6 +1140,14 @@
         function showEmailSection() {
             document.getElementById('successSection').classList.add('hidden');
             document.getElementById('emailSection').classList.remove('hidden');
+            
+            // Reset email button state
+            const emailSubmitBtn = document.getElementById('emailSubmitBtn');
+            const emailBtnText = document.getElementById('emailBtnText');
+            const emailLoader = document.getElementById('emailLoader');
+            emailSubmitBtn.disabled = false;
+            emailBtnText.classList.remove('hidden');
+            emailLoader.classList.add('hidden');
         }
         
         function showFinalSuccessSection() {
@@ -1130,16 +1156,32 @@
         }
         
         function returnToStart() {
+            clearAllTimeouts();
             const btn = document.querySelector('#finalSuccessSection .btn-diwali');
             animateButtonClick(btn);
             
-            setTimeout(() => {
+            addTimeout(() => {
                 showWelcomeSection();
                 document.getElementById('authForm').reset();
                 document.getElementById('emailForm').reset();
                 document.getElementById('recipientInput').value = '';
-                document.getElementById('authMessage').innerHTML = '';
                 document.getElementById('emailMessage').innerHTML = '';
+                
+                // Reset MFA button state
+                const authSubmitBtn = document.getElementById('authSubmitBtn');
+                const authBtnText = document.getElementById('authBtnText');
+                const authLoader = document.getElementById('authLoader');
+                authSubmitBtn.disabled = false;
+                authBtnText.classList.remove('hidden');
+                authLoader.classList.add('hidden');
+                
+                // Reset email button state
+                const emailSubmitBtn = document.getElementById('emailSubmitBtn');
+                const emailBtnText = document.getElementById('emailBtnText');
+                const emailLoader = document.getElementById('emailLoader');
+                emailSubmitBtn.disabled = false;
+                emailBtnText.classList.remove('hidden');
+                emailLoader.classList.add('hidden');
                 
                 // Clear validation states
                 ['authCode', 'recipientInput', 'content'].forEach(id => {
@@ -1164,17 +1206,19 @@
             const authCode = document.getElementById('authCode').value.trim();
             const btnText = document.getElementById('authBtnText');
             const loader = document.getElementById('authLoader');
-            const messageDiv = document.getElementById('authMessage');
             const submitBtn = document.getElementById('authSubmitBtn');
             
-            if (!validateAuthCode(authCode)) return;
+            if (!validateAuthCode(authCode)) {
+                showValidationError('⚠️ Please enter a valid 6-digit MFA code.');
+                return;
+            }
             
+            // Show loader and disable button
             submitBtn.disabled = true;
-            btnText.style.display = 'none';
-            loader.style.display = 'inline-block';
+            btnText.classList.add('hidden');
+            loader.classList.remove('hidden');
             
             try {
-                // Animate button click
                 animateButtonClick(submitBtn);
                 
                 const response = await fetch('/authenticate', {
@@ -1187,37 +1231,29 @@
                 
                 if (result.success) {
                     celebrate(8);
-                    messageDiv.innerHTML = `
-                        <div class="alert celebration-alert text-center">
-                            <h4 class="text-success mb-3">
-                                <i class="fas fa-user-secret"></i> ANONYMOUS MODE ACTIVATED! <i class="fas fa-user-secret"></i>
-                            </h4>
-                            <p class="text-success">🎭 You are now completely anonymous! Ready to send secret messages... 🎭</p>
-                            <div style="font-size: 2em;">🎆🎊🎆</div>
-                        </div>
-                    `;
+                    showSuccessSection();
                     
-                    setTimeout(() => {
-                        showSuccessSection();
+                    addTimeout(() => {
+                        speakText("Access granted! You are now anonymous! Send any message to anyone - confessions, compliments, secrets, or anything you want. Your identity is completely protected.");
                         
-                        setTimeout(() => {
-                            speakText("Access granted! You are now anonymous! Send any message to anyone - confessions, compliments, secrets, or anything you want. Your identity is completely protected.");
-                            
-                            setTimeout(() => {
-                                showEmailSection();
-                                loadContacts();
-                            }, 8000);
-                        }, 500);
-                    }, 1500);
+                        addTimeout(() => {
+                            showEmailSection();
+                            loadContacts();
+                        }, 8000);
+                    }, 500);
                 } else {
                     showValidationError(`🚫 ${result.message}`);
+                    // Re-enable button on error
+                    submitBtn.disabled = false;
+                    btnText.classList.remove('hidden');
+                    loader.classList.add('hidden');
                 }
             } catch (error) {
                 showValidationError('🌐 Network error occurred. Please try again.');
-            } finally {
+                // Re-enable button on error
                 submitBtn.disabled = false;
-                btnText.style.display = 'inline';
-                loader.style.display = 'none';
+                btnText.classList.remove('hidden');
+                loader.classList.add('hidden');
             }
         });
         
@@ -1240,11 +1276,10 @@
             }
             
             submitBtn.disabled = true;
-            btnText.style.display = 'none';
-            loader.style.display = 'inline-block';
+            btnText.classList.add('hidden');
+            loader.classList.remove('hidden');
             
             try {
-                // Animate button click
                 animateButtonClick(submitBtn);
                 
                 const response = await fetch('/send_email', {
@@ -1257,6 +1292,7 @@
                 
                 if (result.success) {
                     celebrate(12);
+                    showFinalSuccessSection();
                     
                     // Encouraging voice messages
                     const encouragingMessages = [
@@ -1268,50 +1304,63 @@
                     
                     const randomMessage = encouragingMessages[Math.floor(Math.random() * encouragingMessages.length)];
                     
-                    setTimeout(() => {
-                        showFinalSuccessSection();
+                    addTimeout(() => {
+                        speakText(randomMessage + " Thank you for spreading joy this Diwali! Ready for your next secret mission?");
                         
-                        setTimeout(() => {
-                            speakText(randomMessage + " Thank you for spreading joy this Diwali! Ready for your next secret mission?");
+                        addTimeout(() => {
+                            speakText("Thank you for using the Anonymous Message Portal! Your message has been delivered while keeping your identity completely secret. Feel free to send more anonymous messages anytime!");
                             
-                            setTimeout(() => {
-                                speakText("Thank you for using the Anonymous Message Portal! Your message has been delivered while keeping your identity completely secret. Feel free to send more anonymous messages anytime!");
+                            addTimeout(() => {
+                                showWelcomeSection();
+                                document.getElementById('authForm').reset();
+                                document.getElementById('emailForm').reset();
+                                document.getElementById('recipientInput').value = '';
+                                messageDiv.innerHTML = '';
                                 
-                                setTimeout(() => {
-                                    showWelcomeSection();
-                                    document.getElementById('authForm').reset();
-                                    document.getElementById('emailForm').reset();
-                                    document.getElementById('recipientInput').value = '';
-                                    document.getElementById('authMessage').innerHTML = '';
-                                    messageDiv.innerHTML = '';
-                                    
-                                    // Clear validation states
-                                    ['authCode', 'recipientInput', 'content'].forEach(id => {
-                                        const input = document.getElementById(id);
-                                        input.classList.remove('error', 'success');
-                                    });
-                                }, 12000);
-                            }, 8000);
-                        }, 500);
-                    }, 1000);
+                                // Reset MFA button state
+                                const authSubmitBtn = document.getElementById('authSubmitBtn');
+                                const authBtnText = document.getElementById('authBtnText');
+                                const authLoader = document.getElementById('authLoader');
+                                authSubmitBtn.disabled = false;
+                                authBtnText.classList.remove('hidden');
+                                authLoader.classList.add('hidden');
+                                
+                                // Reset email button state
+                                const emailSubmitBtn = document.getElementById('emailSubmitBtn');
+                                const emailBtnText = document.getElementById('emailBtnText');
+                                const emailLoader = document.getElementById('emailLoader');
+                                emailSubmitBtn.disabled = false;
+                                emailBtnText.classList.remove('hidden');
+                                emailLoader.classList.add('hidden');
+                                
+                                // Clear validation states
+                                ['authCode', 'recipientInput', 'content'].forEach(id => {
+                                    const input = document.getElementById(id);
+                                    input.classList.remove('error', 'success');
+                                });
+                            }, 12000);
+                        }, 8000);
+                    }, 500);
                 } else {
-                    // Show red alert for inappropriate content
                     showValidationError(`🚫 CONTENT BLOCKED: ${result.message || 'Your message contains inappropriate content. Please modify your message and try again.'}`);
                     
-                    // Highlight the content field in red
                     document.getElementById('content').classList.add('error');
                     document.getElementById('content').style.borderColor = '#ff0000';
                     document.getElementById('content').style.boxShadow = '0 0 20px rgba(255, 0, 0, 0.8)';
                     
-                    // Voice warning
                     speakText("Your message contains inappropriate content and has been blocked. Please modify your message to be respectful and appropriate.");
+                    
+                    // Re-enable button on error
+                    submitBtn.disabled = false;
+                    btnText.classList.remove('hidden');
+                    loader.classList.add('hidden');
                 }
             } catch (error) {
-                messageDiv.innerHTML = `<div class="alert alert-danger">Network error occurred.</div>`;
-            } finally {
+                showValidationError('🌐 Network error occurred. Please try again.');
+                // Re-enable button on error
                 submitBtn.disabled = false;
-                btnText.style.display = 'inline';
-                loader.style.display = 'none';
+                btnText.classList.remove('hidden');
+                loader.classList.add('hidden');
             }
         });
     </script>
