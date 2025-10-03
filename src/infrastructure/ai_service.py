@@ -17,24 +17,7 @@ class AIService:
         # Initialize OpenAI client
         self.client = openai.OpenAI(
             api_key=os.getenv('OPENAI_API_KEY')
-        )
-        
-        # Enhanced fallback keyword filtering (English, Hindi, Punjabi)
-        self.abusive_keywords = [
-            # English sexual/inappropriate
-            'sex', 'fuck', 'shit', 'bitch', 'ass', 'dick', 'pussy', 'boobs', 'nude', 'naked', 'i want sex', 'sex with you',
-            'porn', 'horny', 'sexy', 'kiss', 'love', 'date', 'marry', 'girlfriend', 'boyfriend',
-            # English abusive
-            'hate', 'kill', 'die', 'stupid', 'idiot', 'moron', 'dumb', 'ugly', 'fat',
-            'threat', 'violence', 'harm', 'hurt', 'attack', 'destroy', 'abuse', 'harass', 'bully',
-            # Hindi/Devanagari inappropriate
-            'सेक्स', 'चुदाई', 'रंडी', 'भोसड़ी', 'गांड', 'लंड', 'चूत', 'मादरचोद', 'भेनचोद',
-            'कुत्ता', 'कुतिया', 'हरामी', 'साला', 'बहनचोद', 'गधा', 'उल्लू',
-            # Punjabi inappropriate (Gurmukhi)
-            'ਸੈਕਸ', 'ਚੁਦਾਈ', 'ਰੰਡੀ', 'ਭੋਸੜੀ', 'ਗੰਡ', 'ਲੰਡ', 'ਚੂਤ', 'ਮਾਦਰਚੋਦ',
-            'ਕੁੱਤਾ', 'ਕੁੱਤੀ', 'ਹਰਾਮੀ', 'ਸਾਲਾ', 'ਬਹਿਣਚੋਦ'
-        ]
-        logger.info("AI Service initialized with GPT-4 content filtering.")
+        ) 
     
     def check_for_abuse(self, content: str) -> bool:
         """
@@ -86,19 +69,6 @@ class AIService:
             return is_unsafe
             
         except Exception as e:
-            logger.error(f"GPT-4 moderation failed: {e}")
-            return self._fallback_check(content)
-    
-    def _fallback_check(self, content: str) -> bool:
-        """
-        Fallback keyword-based filtering.
-        """
-        content_lower = content.lower()
-        
-        for keyword in self.abusive_keywords:
-            if keyword in content_lower:
-                logger.warning(f"Fallback filter detected inappropriate content: contains '{keyword}'")
-                return True
-        
-        logger.info("Content passed fallback moderation check.")
-        return False
+            logger.error(f"GPT-4 moderation failed: {e}") 
+            return False
+     

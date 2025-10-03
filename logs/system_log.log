@@ -1,0 +1,23 @@
+2025-09-26 16:47:24,678 - anonymous_email_sender - INFO - Encryption key loaded successfully.
+2025-09-26 17:09:34,843 - anonymous_email_sender - INFO - Encryption key loaded successfully.
+2025-09-26 17:10:47,966 - anonymous_email_sender - INFO - Content passed GPT-4 moderation check.
+2025-09-26 17:10:48,650 - anonymous_email_sender - INFO - Content passed GPT-4 moderation check.
+2025-09-26 17:10:48,881 - anonymous_email_sender - INFO - Data encrypted.
+2025-09-26 17:10:48,904 - anonymous_email_sender - INFO - Email successfully queued for sending.
+2025-09-26 17:11:21,907 - anonymous_email_sender - INFO - Encryption key loaded successfully.
+2025-09-26 17:11:54,134 - anonymous_email_sender - INFO - Encryption key loaded successfully.
+2025-09-26 17:12:07,285 - anonymous_email_sender - INFO - Encryption key loaded successfully.
+2025-09-26 17:12:23,848 - anonymous_email_sender - INFO - Encryption key loaded successfully.
+2025-09-26 17:13:11,315 - anonymous_email_sender - INFO - Encryption key loaded successfully.
+2025-10-03 11:06:41,858 - anonymous_email_sender - INFO - Encryption key loaded successfully.
+2025-10-03 11:08:04,316 - anonymous_email_sender - WARNING - GPT-4 flagged inappropriate content: UNSAFE
+2025-10-03 11:08:22,399 - anonymous_email_sender - WARNING - GPT-4 flagged inappropriate content: UNSAFE
+2025-10-03 11:08:29,228 - anonymous_email_sender - WARNING - GPT-4 flagged inappropriate content: UNSAFE
+2025-10-03 11:08:41,699 - anonymous_email_sender - WARNING - GPT-4 flagged inappropriate content: UNSAFE
+2025-10-03 11:08:58,821 - anonymous_email_sender - WARNING - GPT-4 flagged inappropriate content: UNSAFE
+2025-10-03 11:09:06,076 - anonymous_email_sender - WARNING - GPT-4 flagged inappropriate content: UNSAFE
+2025-10-03 11:12:41,208 - anonymous_email_sender - INFO - Encryption key loaded successfully.
+2025-10-03 11:18:44,549 - anonymous_email_sender - INFO - Content passed GPT-4 moderation check.
+2025-10-03 11:18:45,717 - anonymous_email_sender - INFO - Content passed GPT-4 moderation check.
+2025-10-03 11:18:46,379 - anonymous_email_sender - INFO - Data encrypted.
+2025-10-03 11:18:46,416 - anonymous_email_sender - INFO - Email successfully queued for sending.

@@ -12,7 +12,6 @@ load_dotenv()
 # Add the project root to the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from application.auth_service import AuthService
 from application.email_service import EmailService
 from infrastructure.csv_repository import CSVRepository
 from infrastructure.ai_service import AIService
@@ -22,25 +21,19 @@ from infrastructure.logger import setup_logger, logger
 app = Flask(__name__)
 
 # Initialize services
-try:
-    encryption_service = EncryptionService()
-    ai_service = AIService()
-    csv_repository = CSVRepository(
-        auth_file='auth_codes.csv',
-        email_file='emails_to_send.csv',
-        encryption_service=encryption_service
-    )
-    auth_service = AuthService(auth_repository=csv_repository)
-    email_service = EmailService(
-        email_repository=csv_repository,
-        ai_service=ai_service
-    )
-    
-    # Initialize pygame for sound
-    pygame.mixer.init(frequency=22050, size=-16, channels=2, buffer=512)
-    
-except Exception as e:
-    logger.error(f"Failed to initialize services: {e}")
+encryption_service = EncryptionService()
+ai_service = AIService()
+csv_repository = CSVRepository(
+    email_file='data/emails_to_send.csv',
+    encryption_service=encryption_service
+)
+email_service = EmailService(
+    email_repository=csv_repository,
+    ai_service=ai_service
+)
+
+# Initialize pygame for sound
+pygame.mixer.init(frequency=22050, size=-16, channels=2, buffer=512)
 
 @app.route('/')
 def index():
@@ -69,9 +62,9 @@ def authenticate():
         print(f"DEBUG: Current valid code: {current_code}")
         
         if totp.verify(auth_code, valid_window=2):
-            return jsonify({'success': True, 'message': 'MFA Authentication successful!'})
+            return jsonify({'success': True, 'message': 'Secret Authentication successful!'})
         else:
-            return jsonify({'success': False, 'message': f'Invalid MFA code. Expected: {current_code}'})
+            return jsonify({'success': False, 'message': 'Invalid secret code. Please check your authenticator app and try again.'})
     except Exception as e:
         logger.error(f"Authentication error: {e}")
         print(f"DEBUG: Exception: {e}")
@@ -81,7 +74,7 @@ def authenticate():
 def get_contacts():
     try:
         import pandas as pd
-        contacts_file = 'contacts.csv'
+        contacts_file = 'data/contacts.csv'
         
         if os.path.exists(contacts_file):
             df = pd.read_csv(contacts_file)
@@ -133,7 +126,7 @@ if __name__ == '__main__':
     # Create sample contacts file if it doesn't exist
     import pandas as pd
     
-    contacts_file = 'contacts.csv'
+    contacts_file = 'data/contacts.csv'
     if not os.path.exists(contacts_file):
         sample_contacts = pd.DataFrame({
             'name': ['Alice Johnson', 'Bob Smith', 'Carol Davis', 'David Wilson', 'Emma Brown'],
@@ -141,4 +134,4 @@ if __name__ == '__main__':
         })
         sample_contacts.to_csv(contacts_file, index=False)
     
-    app.run(debug=True, port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=False)

@@ -1421,6 +1421,10 @@
             document.getElementById('emailSection').classList.remove('hidden');
             document.getElementById('restrictionsNotification').style.display = 'block';
             
+            // Clear content area and reset placeholder
+            document.getElementById('content').innerHTML = '';
+            updatePlaceholder();
+            
             // Reset email button state
             const emailSubmitBtn = document.getElementById('emailSubmitBtn');
             const emailBtnText = document.getElementById('emailBtnText');
@@ -1446,6 +1450,8 @@
                 document.getElementById('emailForm').reset();
                 document.getElementById('recipientInput').value = '';
                 document.getElementById('authCode').placeholder = 'Enter 6-digit secret Code...';
+                document.getElementById('content').innerHTML = '';
+                updatePlaceholder();
                 document.getElementById('emailMessage').innerHTML = '';
                 
                 // Reset MFA button state
@@ -1538,18 +1544,22 @@
         document.getElementById('emailForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            // recipient already defined above
             const content = getContentText().trim();
+            const recipient = document.getElementById('recipientInput').value.trim();
             const btnText = document.getElementById('emailBtnText');
             const loader = document.getElementById('emailLoader');
             const messageDiv = document.getElementById('emailMessage');
-            
-            const recipient = document.getElementById('recipientInput').value.trim();
-            const isValidRecipient = validateRecipient();
-            const isValidContent = validateContent(content);
             const submitBtn = document.getElementById('emailSubmitBtn');
             
-            if (!isValidRecipient || !isValidContent) {
+            // Validate recipient
+            if (!validateRecipient()) {
+                showValidationError('⚠️ Please enter a valid email address.');
+                return;
+            }
+            
+            // Validate content length
+            if (!validateContent(content)) {
+                showValidationError('⚠️ Please write a more detailed message (at least 10 characters).');
                 return;
             }
             
@@ -1594,6 +1604,8 @@
                                 document.getElementById('emailForm').reset();
                                 document.getElementById('recipientInput').value = '';
                                 document.getElementById('authCode').placeholder = 'Enter 6-digit secret Code...';
+                                document.getElementById('content').innerHTML = '';
+                                updatePlaceholder();
                                 messageDiv.innerHTML = '';
                                 
                                 // Reset MFA button state

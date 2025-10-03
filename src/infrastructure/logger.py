@@ -5,14 +5,14 @@ import os
 from datetime import datetime
 
 # Define a log file path.
-LOG_FILE = "system_log.log"
+LOG_FILE = "logs/system_log.log"
 
 # Set up the logger.
 def setup_logger():
     """Configures the application-wide logger."""
     try:
-        if os.path.exists(LOG_FILE):
-            os.rename(LOG_FILE, f"system_log_old_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log")
+        # if os.path.exists(LOG_FILE):
+        #     os.rename(LOG_FILE, f"system_log_old_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log")
 
         # Create the logger
         logger = logging.getLogger('anonymous_email_sender')

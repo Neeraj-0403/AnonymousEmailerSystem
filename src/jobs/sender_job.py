@@ -26,7 +26,7 @@ def run_email_job():
 
         # Initialize infrastructure components
         encryption_service = EncryptionService()
-        email_repository = CSVRepository(auth_file='auth_codes.csv', email_file='emails_to_send.csv', encryption_service=encryption_service)
+        email_repository = CSVRepository(email_file='data/emails_to_send.csv', encryption_service=encryption_service)
         email_sender = EmailSender()
 
         # Get the next batch of emails to send (e.g., up to 10 records)
